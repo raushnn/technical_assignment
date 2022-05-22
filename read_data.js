@@ -1,5 +1,4 @@
-console.log("Hello world");
-var DATA = [
+let DATA = [
     ['2022-04-01', 158.55, 158.89, 157.71, 158.35, '816.14K', '-0.20%'],
     ['2022-03-31', 157.04, 159.05, 156.9, 158.66, '999.82K', '0.95%'],
     ['2022-03-30', 157.53, 158.06, 156.37, 157.16, '878.66K', '-0.13%'],
@@ -579,36 +578,40 @@ var DATA = [
     ['2020-01-07', 172.21, 172.31, 171.91, 172.12, '582.59K', '-0.07%'],
     ['2020-01-06', 172.45, 172.6, 172.07, 172.24, '496.41K', '0.07%'],
     ['2020-01-03', 171.1, 172.38, 171.1, 172.12, '528.22K', '0.50%'],
-    ['2020-01-02', 170.54, 171.42, 170.19, 171.26, '509.18K', '0.45%']
+    ['2020-01-02', 170.54, 171.42, 170.19, 171.26, '509.18K', '0.45%'],
 ];
-
+for (let i = 0; i < DATA.length; i++) {
+    DATA[i].push(NaN)
+    DATA[i].push(NaN)
+    DATA[i].push(NaN)
+}
 //putting NaN data for Moving standard deviation
-for (let i = 0; i < DATA.length; i++) {
-    DATA[i].push(NaN)
-}
+// for (let i = 0; i < DATA.length; i++) {
+//     DATA[i].push(0);
+// }
 
-//calculating True range
-let true_range = []
-for (let i = 0; i < DATA.length; i++) {
-    true_range.push(DATA[i][2] - DATA[i][3])
-}
-// putng this for atr
-for (let i = 0; i < DATA.length; i++) {
-    DATA[i].push(NaN)
-}
+// //calculating True range
+// let true_range = [];
+// for (let i = 0; i < DATA.length; i++) {
+//     true_range.push(DATA[i][2] - DATA[i][3]);
+// }
+// // putng this for atr
+// for (let i = 0; i < DATA.length; i++) {
+//     DATA[i].push(0);
+// }
 
-//calculating the ATR
-let temp_var_for_atr = []
-for (let i = 0; i < DATA.length - 14; i++) {
-    var sum = true_range.slice(i, i + 14).reduce((a, b) => a + b, 0);
-    // console.log(sum)
-    DATA[i][8] = (sum / 14)
-    temp_var_for_atr.push(sum / 14)
-}
+// //calculating the ATR
+// let temp_var_for_atr = [];
+// for (let i = 0; i < DATA.length - 14; i++) {
+//     var sum = true_range.slice(i, i + 14).reduce((a, b) => a + b, 0);
+//     // console.log(sum)
+//     DATA[i][8] = sum / 14;
+//     temp_var_for_atr.push(sum / 14);
+// }
 
-for (let i = 0; i < DATA.length; i++) {
-    DATA[i].push(NaN)
-}
+// for (let i = 0; i < DATA.length; i++) {
+//     DATA[i].push(0);
+// }
 
 // console.log(DATA)
 
@@ -618,18 +621,20 @@ for (let i = 0; i < DATA.length; i++) {
 //     return data;
 // }
 
+// update_data(2);
+graph_plotter();
+
 function getStandardDeviation(numbersArr) {
     // CALCULATE AVERAGE
     var total = 0;
-    for (var key in numbersArr)
-        total += numbersArr[key];
+    for (var key in numbersArr) total += numbersArr[key];
     var meanVal = total / numbersArr.length;
     // CALCULATE AVERAGE
 
     // CALCULATE STANDARD DEVIATION
     var SDprep = 0;
     for (var key in numbersArr)
-        SDprep += Math.pow((parseFloat(numbersArr[key]) - meanVal), 2);
+        SDprep += Math.pow(parseFloat(numbersArr[key]) - meanVal, 2);
     var SDresult = Math.sqrt(SDprep / (numbersArr.length - 1));
     return SDresult;
 }
@@ -637,25 +642,33 @@ function getStandardDeviation(numbersArr) {
 // var slider = document.getElementById("myRange");
 // var n = slider.value;
 
-function graph_plotter(data) {
-    console.log("Plotting...", data);
+function graph_plotter() {
+    console.log('Plotting...', DATA);
     // The data used in this sample can be obtained from the CDN
     // https://cdn.anychart.com/csv-data/csco-daily.js
     // create data table on loaded data
-    var dataTable = anychart.data.table();
-    dataTable.addData(data);
+    let dataTable = anychart.data.table();
+    dataTable.addData(DATA);
+
+    let btn = document.getElementById('submit');
+
+    btn.onclick = function () {
+        n = document.getElementById('nvalue').value;
+        console.log(n);
+        update_data(n);
+        dataTable.addData(DATA);
+    };
 
     // map loaded data
     var mapping = dataTable.mapAs();
-    mapping.addField('open', 1, "first");
+    mapping.addField('open', 1, 'first');
     mapping.addField('high', 2, 'max');
     mapping.addField('low', 3, 'min');
     mapping.addField('close', 4, 'last');
 
-
-    var linemapping = dataTable.mapAs({ 'value': 7 });
-    var mstdforatr= dataTable.mapAs({'value': 9})
-    var atrmapping = dataTable.mapAs({ 'value': 8 });
+    var linemapping = dataTable.mapAs({ value: 7 });
+    var mstdforatr = dataTable.mapAs({ value: 9 });
+    var atrmapping = dataTable.mapAs({ value: 8 });
     // var dataForMSTD= anychart.data.table();
     // dataForMSTD.addData(mstd);
 
@@ -663,7 +676,6 @@ function graph_plotter(data) {
     // linemapping.addField('mstd', 0, "first")
 
     // linemapping= dataForMSTD.mapAs({'value': 1});
-
 
     // var map= dataTable.mapAs();
     // // map.addField()
@@ -687,8 +699,8 @@ function graph_plotter(data) {
     plot_2.line(atrmapping).name('ATR 14');
     // atr.stroke('#bf360c');
     var plot_3 = chart.plot(2);
-    plot_3.line(linemapping).name("MSTD for CLose")
-    plot_3.line(mstdforatr).name("MSTD for ATR")
+    plot_3.line(linemapping).name('MSTD for CLose');
+    plot_3.line(mstdforatr).name('MSTD for ATR');
     // chart.plot(0).line(mapping);
 
     // var mstd= plot.line(mapping).series();
@@ -704,27 +716,36 @@ function graph_plotter(data) {
 // output.innerHTML = slider.value; // Display the default slider value
 
 // Update the current slider value (each time you drag the slider handle)
-var btn = document.getElementById('submit');
 
-btn.onclick = function () {
-    n = document.getElementById('nvalue').value;
-    // console.log("Value is", n);
+function update_data(n) {
+    
+    //calculating True range
+    let true_range = []
+    for (let i = 0; i < DATA.length; i++) {
+        true_range.push(DATA[i][2] - DATA[i][3])
+    }
+    // putng this for atr
+    //calculating the ATR
+    let temp_var_for_atr = []
+    for (let i = 0; i < DATA.length - 14; i++) {
+        var sum = true_range.slice(i, i + 14).reduce((a, b) => a + b, 0);
+        // console.log(sum)
+        DATA[i][8] = (sum / 14)
+        temp_var_for_atr.push(sum / 14)
+    }
+    
     let close = [];
-    let d = DATA.map(function (arr) {
-        return arr.slice();
-    });
-    // console.log(n);
-    for (let i = 0; i < d.length; i++) {
-        close.push(d[i][4])
+    for (let i = 0; i < DATA.length; i++) {
+        close.push(DATA[i][4]);
     }
     let linemapplen = close.length;
     for (let i = 0; i < linemapplen - n; i++) {
-        d[i][7] = (getStandardDeviation(close.slice(i, i + n)))
-        d[i][9] = (getStandardDeviation(temp_var_for_atr.slice(i, i + n)))
+        DATA[i][7] = getStandardDeviation(close.slice(i, i + n));
+        DATA[i][9] = getStandardDeviation(temp_var_for_atr.slice(i, i + n));
     }
 
-    // for (let i = Math.max(linemapplen - n, 0); i < linemapplen; i++) {
-    //     d[i][7] = NaN;
-    // }
-    graph_plotter(d);
+    for (let i= linemapplen-n; i<linemapplen; i++){
+        DATA[i][7]= NaN
+        DATA[i][9]= NaN
+    }
 }

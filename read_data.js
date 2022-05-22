@@ -582,11 +582,37 @@ var DATA = [
     ['2020-01-02', 170.54, 171.42, 170.19, 171.26, '509.18K', '0.45%']
 ];
 
-for (let i=0; i< DATA.length; i++){
+//putting NaN data for Moving standard deviation
+for (let i = 0; i < DATA.length; i++) {
     DATA[i].push(NaN)
 }
 
-console.log("Length of rows:", DATA[0].length);
+//calculating True range
+let true_range = []
+for (let i = 0; i < DATA.length; i++) {
+    true_range.push(DATA[i][2] - DATA[i][3])
+}
+// putng this for atr
+for (let i = 0; i < DATA.length; i++) {
+    DATA[i].push(NaN)
+}
+
+//calculating the ATR
+let temp_var_for_atr = []
+for (let i = 0; i < DATA.length - 14; i++) {
+    var sum = true_range.slice(i, i + 14).reduce((a, b) => a + b, 0);
+    // console.log(sum)
+    DATA[i][8] = (sum / 14)
+    temp_var_for_atr.push(sum / 14)
+}
+
+for (let i = 0; i < DATA.length; i++) {
+    DATA[i].push(NaN)
+}
+
+// console.log(DATA)
+
+// console.log("Length of rows:", DATA[0].length);
 
 // function get_csco_daily_data() {
 //     return data;
@@ -608,13 +634,11 @@ function getStandardDeviation(numbersArr) {
     return SDresult;
 }
 
-
-
 // var slider = document.getElementById("myRange");
 // var n = slider.value;
 
 function graph_plotter(data) {
-    console.log("Plotting...", data); 
+    console.log("Plotting...", data);
     // The data used in this sample can be obtained from the CDN
     // https://cdn.anychart.com/csv-data/csco-daily.js
     // create data table on loaded data
@@ -630,6 +654,8 @@ function graph_plotter(data) {
 
 
     var linemapping = dataTable.mapAs({ 'value': 7 });
+    var mstdforatr= dataTable.mapAs({'value': 9})
+    var atrmapping = dataTable.mapAs({ 'value': 8 });
     // var dataForMSTD= anychart.data.table();
     // dataForMSTD.addData(mstd);
 
@@ -658,10 +684,11 @@ function graph_plotter(data) {
 
     // create ATR indicator
     var plot_2 = chart.plot(1);
-    plot_2.atr(mapping).series().name('ATR 14');
+    plot_2.line(atrmapping).name('ATR 14');
     // atr.stroke('#bf360c');
     var plot_3 = chart.plot(2);
-    plot_3.line(linemapping).name("MSTD")
+    plot_3.line(linemapping).name("MSTD for CLose")
+    plot_3.line(mstdforatr).name("MSTD for ATR")
     // chart.plot(0).line(mapping);
 
     // var mstd= plot.line(mapping).series();
@@ -673,7 +700,6 @@ function graph_plotter(data) {
     // initiate chart drawing
     chart.draw();
 }
-
 // var output = document.getElementById("demo");
 // output.innerHTML = slider.value; // Display the default slider value
 
@@ -682,44 +708,45 @@ var btn = document.getElementById('submit');
 
 btn.onclick = function () {
     n = document.getElementById('nvalue').value;
-    console.log("Value is", n);
+    // console.log("Value is", n);
     let close = [];
-    let d = DATA.map(function(arr) {
+    let d = DATA.map(function (arr) {
         return arr.slice();
     });
-    console.log(n);
+    // console.log(n);
     for (let i = 0; i < d.length; i++) {
         close.push(d[i][4])
     }
-    console.log("Close:", close);
-    console.log("Initial Data:", DATA);
+    // console.log("Close:", close);
+    // console.log("Initial Data:", DATA);
     let linemapplen = close.length;
-    console.log("prev", d[0][7]);
+    // console.log("prev", d[0][7]);
+
+    //Moving standard deviation for close price
     for (let i = 0; i < linemapplen - n; i++) {
         // console.log("previous value:", d[i][7]);
         d[i][7] = (getStandardDeviation(close.slice(i, i + n)))
         // console.log("after value:", d[i][7]);
     }
-    console.log("after", d[0][7]);
-    console.log('------------------')
+
+    //Moving standard deviation for ATR
+    for (let i = 0; i < linemapplen - n; i++) {
+        // console.log("previous value:", d[i][7]);
+        d[i][9] = (getStandardDeviation(temp_var_for_atr.slice(i, i + n)))
+        // console.log("after value:", d[i][7]);
+    }
+
     for (let i = Math.max(linemapplen - n, 0); i < linemapplen; i++) {
         // console.log("previous value:", d[i][7]);
         d[i][7] = NaN;
         // console.log("after value:", d[i][7]);
     }
-    console.log("Final Data:", d);
+    // console.log("Final Data:", d);
     graph_plotter(d);
 }
 
-
-
 // console.log(close);
 // const mstd= [];
-
-
-
-
-
 // k= get_csco_daily_data();
 
 // console.log(data);

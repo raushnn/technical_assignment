@@ -585,41 +585,17 @@ for (let i = 0; i < DATA.length; i++) {
     DATA[i].push(NaN)
     DATA[i].push(NaN)
 }
-//putting NaN data for Moving standard deviation
-// for (let i = 0; i < DATA.length; i++) {
-//     DATA[i].push(0);
-// }
-
-// //calculating True range
-// let true_range = [];
-// for (let i = 0; i < DATA.length; i++) {
-//     true_range.push(DATA[i][2] - DATA[i][3]);
-// }
-// // putng this for atr
-// for (let i = 0; i < DATA.length; i++) {
-//     DATA[i].push(0);
-// }
-
-// //calculating the ATR
-// let temp_var_for_atr = [];
-// for (let i = 0; i < DATA.length - 14; i++) {
-//     var sum = true_range.slice(i, i + 14).reduce((a, b) => a + b, 0);
-//     // console.log(sum)
-//     DATA[i][8] = sum / 14;
-//     temp_var_for_atr.push(sum / 14);
-// }
-
-// for (let i = 0; i < DATA.length; i++) {
-//     DATA[i].push(0);
-// }
-
-// console.log(DATA)
-
-// console.log("Length of rows:", DATA[0].length);
-
-// function get_csco_daily_data() {
-//     return data;
-// }
+let true_range = []
+for (let i = 0; i < DATA.length; i++) {
+    true_range.push(DATA[i][2] - DATA[i][3])
+}
+let temp_var_for_atr = []
+for (let i = 0; i < DATA.length - 14; i++) {
+    var sum = true_range.slice(i, i + 14).reduce((a, b) => a + b, 0);
+    // console.log(sum)
+    DATA[i][8] = (sum / 14)
+    temp_var_for_atr.push(sum / 14)
+}
 
 // update_data(2);
 graph_plotter();
@@ -639,14 +615,8 @@ function getStandardDeviation(numbersArr) {
     return SDresult;
 }
 
-// var slider = document.getElementById("myRange");
-// var n = slider.value;
 
 function graph_plotter() {
-    console.log('Plotting...', DATA);
-    // The data used in this sample can be obtained from the CDN
-    // https://cdn.anychart.com/csv-data/csco-daily.js
-    // create data table on loaded data
     let dataTable = anychart.data.table();
     dataTable.addData(DATA);
 
@@ -669,18 +639,7 @@ function graph_plotter() {
     var linemapping = dataTable.mapAs({ value: 7 });
     var mstdforatr = dataTable.mapAs({ value: 9 });
     var atrmapping = dataTable.mapAs({ value: 8 });
-    // var dataForMSTD= anychart.data.table();
-    // dataForMSTD.addData(mstd);
 
-    // var linemapping= dataForMSTD.mapAs();
-    // linemapping.addField('mstd', 0, "first")
-
-    // linemapping= dataForMSTD.mapAs({'value': 1});
-
-    // var map= dataTable.mapAs();
-    // // map.addField()
-    // map.addField('close', 4, "last");
-    // create stock chart
     var chart = anychart.stock();
 
     // create plot on the chart
@@ -691,9 +650,6 @@ function graph_plotter() {
     candlestickSeries.name('FGBL');
     candlestickSeries.stroke('10px #228B22');
 
-    // plot.line(linemapping).name('MSTD');
-    // mstd.name('MSTD');
-
     // create ATR indicator
     var plot_2 = chart.plot(1);
     plot_2.line(atrmapping).name('ATR 14');
@@ -701,38 +657,20 @@ function graph_plotter() {
     var plot_3 = chart.plot(2);
     plot_3.line(linemapping).name('MSTD for CLose');
     plot_3.line(mstdforatr).name('MSTD for ATR');
-    // chart.plot(0).line(mapping);
 
-    // var mstd= plot.line(mapping).series();
-    // mstd.name('MSTD')
-    // mstd.stroke('#bf300d')
-    // set container id for the chart
     chart.container('container');
 
     // initiate chart drawing
     chart.draw();
 }
-// var output = document.getElementById("demo");
-// output.innerHTML = slider.value; // Display the default slider value
-
-// Update the current slider value (each time you drag the slider handle)
 
 function update_data(n) {
     
     //calculating True range
-    let true_range = []
-    for (let i = 0; i < DATA.length; i++) {
-        true_range.push(DATA[i][2] - DATA[i][3])
-    }
+
     // putng this for atr
     //calculating the ATR
-    let temp_var_for_atr = []
-    for (let i = 0; i < DATA.length - 14; i++) {
-        var sum = true_range.slice(i, i + 14).reduce((a, b) => a + b, 0);
-        // console.log(sum)
-        DATA[i][8] = (sum / 14)
-        temp_var_for_atr.push(sum / 14)
-    }
+
     
     let close = [];
     for (let i = 0; i < DATA.length; i++) {

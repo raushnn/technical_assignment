@@ -21,61 +21,20 @@
 }</style>
  </head>
  <body>
-  <div id="container"></div>
+  <div>
+    <input type="number" id="nvalue">
+    <button id="submit">Submit</button>
+  </div>
+  <div id="container">
+    <!-- <div class="slidecontainer">
+      <input type="range" min="1" max="15" value="0" class="slider" id="myRange">
+    </div> -->
+  </div>
   <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-core.min.js?hcode=a0c21fc77e1449cc86299c5faa067dc4"></script>
   <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-stock.min.js?hcode=a0c21fc77e1449cc86299c5faa067dc4"></script>
   <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-exports.min.js?hcode=a0c21fc77e1449cc86299c5faa067dc4"></script>
   <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-ui.min.js?hcode=a0c21fc77e1449cc86299c5faa067dc4"></script>
-  <script src="/read_data.js"></script>
-  <script type="text/javascript">anychart.onDocumentReady(function () {
-// The data used in this sample can be obtained from the CDN
-// https://cdn.anychart.com/csv-data/csco-daily.js
-// create data table on loaded data
-var dataTable = anychart.data.table();
-dataTable.addData(get_csco_daily_data());
+  <script src="read_data.js" defer></script>
 
-// map loaded data
-var mapping = dataTable.mapAs();
-mapping.addField('open', 1, "first");
-mapping.addField('high', 2, 'max');
-mapping.addField('low', 3, 'min');
-mapping.addField('close', 4, 'last');
-
-linemapping= dataTable.mapAs({'value': 4});
-
-// var map= dataTable.mapAs();
-// // map.addField()
-// map.addField('close', 4, "last");
-
-// create stock chart
-var chart = anychart.stock();
-
-// create plot on the chart
-var plot = chart.plot(0);
-
-// create line series
-var candlestickSeries = plot.candlestick(mapping);
-candlestickSeries.name('FGBL');
-candlestickSeries.stroke('10px #228B22');
-
-plot.line(linemapping).name('Close');
-// mstd.name('MSTD');
-
-// create ATR indicator
-var plot_2= chart.plot(1);
-plot_2.atr(mapping).series().name('ATR');
-// atr.stroke('#bf360c');
-
-// chart.plot(0).line(mapping);
-
-// var mstd= plot.line(mapping).series();
-// mstd.name('MSTD')
-// mstd.stroke('#bf300d')
-// set container id for the chart
-chart.container('container');
-
-// initiate chart drawing
-chart.draw();
-});</script>
  </body>
 </html>

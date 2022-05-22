@@ -597,7 +597,6 @@ for (let i = 0; i < DATA.length - 14; i++) {
     temp_var_for_atr.push(sum / 14)
 }
 
-// update_data(2);
 graph_plotter();
 
 function getStandardDeviation(numbersArr) {
@@ -605,8 +604,6 @@ function getStandardDeviation(numbersArr) {
     var total = 0;
     for (var key in numbersArr) total += numbersArr[key];
     var meanVal = total / numbersArr.length;
-    // CALCULATE AVERAGE
-
     // CALCULATE STANDARD DEVIATION
     var SDprep = 0;
     for (var key in numbersArr)
@@ -665,12 +662,6 @@ function graph_plotter() {
 }
 
 function update_data(n) {
-    
-    //calculating True range
-
-    // putng this for atr
-    //calculating the ATR
-
     
     let close = [];
     for (let i = 0; i < DATA.length; i++) {

@@ -717,36 +717,14 @@ btn.onclick = function () {
     for (let i = 0; i < d.length; i++) {
         close.push(d[i][4])
     }
-    // console.log("Close:", close);
-    // console.log("Initial Data:", DATA);
     let linemapplen = close.length;
-    // console.log("prev", d[0][7]);
-
-    //Moving standard deviation for close price
     for (let i = 0; i < linemapplen - n; i++) {
-        // console.log("previous value:", d[i][7]);
         d[i][7] = (getStandardDeviation(close.slice(i, i + n)))
-        // console.log("after value:", d[i][7]);
-    }
-
-    //Moving standard deviation for ATR
-    for (let i = 0; i < linemapplen - n; i++) {
-        // console.log("previous value:", d[i][7]);
         d[i][9] = (getStandardDeviation(temp_var_for_atr.slice(i, i + n)))
-        // console.log("after value:", d[i][7]);
     }
 
-    for (let i = Math.max(linemapplen - n, 0); i < linemapplen; i++) {
-        // console.log("previous value:", d[i][7]);
-        d[i][7] = NaN;
-        // console.log("after value:", d[i][7]);
-    }
-    // console.log("Final Data:", d);
+    // for (let i = Math.max(linemapplen - n, 0); i < linemapplen; i++) {
+    //     d[i][7] = NaN;
+    // }
     graph_plotter(d);
 }
-
-// console.log(close);
-// const mstd= [];
-// k= get_csco_daily_data();
-
-// console.log(data);
